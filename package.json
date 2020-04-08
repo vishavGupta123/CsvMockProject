@@ -1,0 +1,20 @@
+{
+  "name": "csvproject",
+  "version": "1.0.0",
+  "description": "Reading Csv files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vishav Gupta",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^4.8.8",
+    "csvtojson": "^2.0.10",
+    "ejs": "^3.0.2",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.7",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.2"
+  }
+}

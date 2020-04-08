@@ -1,0 +1,45 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <form action="">
+            <input type="text" placeholder="Enter the data to be searched" id="my-input">
+            <input type="submit" value="Submit" onclick="searchFunction()" id="searchButton">
+        </form>
+        <div>
+            <table id="my-table">
+                <th>id</th>
+                <th>name</th>
+                <th>manufacture_year</th>
+                <th>make</th>
+                <th>price</th>
+                <% csvData.map((result)=>{%>
+                  <tr>
+                        <td ><%= result.id %></td>
+                        <td ><%= result.name %></td>
+                        <td ><%= result.manufacture_year %></td>
+                        <td ><%= result.make %></td>
+                        <td ><%= result.price %></td>
+                    </tr>
+                
+              <%}) %>
+            </table>
+        </div>
+      
+            
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            $('#container').ready(function(){
+                console.log("hello World");
+                $('#my-input').on("keyup",function(){
+                    var value=$(this).val().toLowerCase();
+                    $('#my-table tr').filter(function(){
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value)>-1);
+                    });
+                });
+            });
+        </script>
+
+    </body>
+</html>

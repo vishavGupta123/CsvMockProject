@@ -1,0 +1,22 @@
+<html>
+    <head>
+
+    </head>
+
+    <body>
+        
+
+        <form action="file/upload" method="POST" enctype="multipart/form-data">
+        
+        <input type="file" name="CsvFile" placeholder="File">
+        <input type="submit" value ="add file">
+        </form>
+        <% for(let f of filename) {%> 
+            <a href="/readFile/<%=f.csvFile%>" ><%= f.name %></a>
+            <br/>
+            <%}%>
+
+            
+    </body>
+
+</html>
