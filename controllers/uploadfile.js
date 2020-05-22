@@ -8,6 +8,13 @@ const CsvToJson = require("csvtojson");
 
 module.exports.upload = async function (req, res) {
   try {
+    let csvFile = await CsvFile.findOne({ name: req.body.filename });
+    console.log(csvFile + "****");
+    if (csvFile) {
+      return res.redirect(
+        "/file/upload/?err=" + "cannot upload a file with same name"
+      );
+    }
     CsvFile.uploadedFile(req, res, function (err) {
       if (err) {
         console.log("Multer Error: ", err);
