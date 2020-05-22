@@ -1,22 +1,63 @@
 <html>
-    <head>
+  <head>
+    <style>
+      body {
+        background-color: antiquewhite;
+      }
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: red;
+        color: white;
+        text-align: center;
+      }
+      #form {
+        display: block;
+        background-color: aqua;
+        margin-top: 10px;
+        text-align: center;
+      }
+    </style>
+  </head>
 
-    </head>
+  <body>
+    <div style="margin: auto; text-align: center; margin-top: -5px;">
+      <h1>List Of Files</h1>
+      <% for(let f of filename) {%>
+      <a href="/readFile/<%=f.csvFile%>?page_num=1"> <%= f.name %> </a>
 
-    <body>
-        
-
-        <form action="file/upload" method="POST" enctype="multipart/form-data">
-        
-        <input type="file" name="CsvFile" placeholder="File">
-        <input type="submit" value ="add file">
-        </form>
-        <% for(let f of filename) {%> 
-            <a href="/readFile/<%=f.csvFile%>" ><%= f.name %></a>
-            <br/>
-            <%}%>
-
-            
-    </body>
-
+      <br />
+      <%}%>
+    </div>
+    <%= typeof msg!='undefined' ? msg : '' %>
+    <form
+      action="/file/upload"
+      method="POST"
+      enctype="multipart/form-data"
+      id="form"
+    >
+      <input
+        type="text"
+        name="filename"
+        placeholder="Enter File Name"
+        required
+        style="display: block; margin: auto; margin-top: 10px;"
+      />
+      <input
+        type="file"
+        name="CsvFile"
+        placeholder="File"
+        style="display: block; margin: auto; margin-top: 10px;"
+        required
+      />
+      <input
+        type="submit"
+        value="add file"
+        style="display: block; margin: auto; margin-top: 10px;"
+      />
+    </form>
+    <div class="footer">Footer</div>
+  </body>
 </html>

@@ -1,45 +1,195 @@
 <html>
-    <head>
+  <head>
+    <style>
+      #search-form {
+        display: block;
+        width: 150px;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      #my-table {
+        margin: auto;
+        width: 600px;
+        background-color: antiquewhite;
+        border: 1px solid black;
+      }
+      #my-table th {
+        background-color: aqua;
+      }
+      td {
+        text-align: center;
+      }
+      .link-style {
+        display: inline-block;
+        width: 115px;
+        height: 25px;
+        background-color: aliceblue;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: black;
+        font-weight: bold;
+      }
+      #wrapper {
+        text-align: center;
+      }
+      #sortingdiv {
+        height: 50px;
+        background-color: bisque;
+        display: flex;
+        justify-content: space-between;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="search-form" action="">
+      <input
+        type="text"
+        placeholder="Enter the data to be searched"
+        id="my-input"
+      />
+    </form>
+    <div id="sortingdiv">
+      <p><button onclick="sortTable(1)">SortBYName</button></p>
+      <p><button onclick="sortTable(2)">SortBYMANUFACTURE_YEAR</button></p>
+      <p><button onclick="sortTable(3)">SortBYCompanyName</button></p>
+      <p><button onclick="sortTable(4)">SortBYPRICE</button></p>
+    </div>
 
-    </head>
-    <body>
-        <form action="">
-            <input type="text" placeholder="Enter the data to be searched" id="my-input">
-            <input type="submit" value="Submit" onclick="searchFunction()" id="searchButton">
-        </form>
-        <div>
-            <table id="my-table">
-                <th>id</th>
-                <th>name</th>
-                <th>manufacture_year</th>
-                <th>make</th>
-                <th>price</th>
-                <% csvData.map((result)=>{%>
-                  <tr>
-                        <td ><%= result.id %></td>
-                        <td ><%= result.name %></td>
-                        <td ><%= result.manufacture_year %></td>
-                        <td ><%= result.make %></td>
-                        <td ><%= result.price %></td>
-                    </tr>
-                
-              <%}) %>
-            </table>
-        </div>
-      
-            
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script>
-            $('#container').ready(function(){
-                console.log("hello World");
-                $('#my-input').on("keyup",function(){
-                    var value=$(this).val().toLowerCase();
-                    $('#my-table tr').filter(function(){
-                        $(this).toggle($(this).text().toLowerCase().indexOf(value)>-1);
-                    });
-                });
-            });
-        </script>
+    <div>
+      <table id="my-table">
+        <% for( head of headers) {%>
+        <th><%= head %></th>
+        <%}%> <% csvData.map((result)=>{%>
+        <tbody>
+          <tr>
+            <td><%= result.id %></td>
+            <td><%= result.name %></td>
+            <td><%= result.manufacture_year %></td>
+            <td><%= result.make %></td>
+            <td><%= result.price %></td>
+          </tr>
+        </tbody>
 
-    </body>
+        <%}) %>
+      </table>
+      <div id="wrapper">
+        <% if(pageNum!==1) {%>
+        <a
+          href="/readFile/<%=csvFile._id%>?page_num=<%= previousPageNum %> "
+          class="link-style"
+          style="background-color: red;"
+        >
+          Previous
+        </a>
+        <%}%> <% if(pageNum!==numberOfPages){%>
+        <a
+          href="/readFile/<%= csvFile._id %>?page_num=<%= nextPageNum %>"
+          class="link-style"
+          style="background-color: green;"
+          >Next</a
+        >
+        <%}%>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+      $("#container").ready(function () {
+        console.log("hello World");
+        $("#my-input").on("keyup", function () {
+          var value = $(this).val().toLowerCase();
+          $("#my-table tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+          });
+        });
+      });
+      function sortTable(n) {
+        var table,
+          rows,
+          switching,
+          i,
+          x,
+          y,
+          shouldSwitch,
+          dir,
+          switchcount = 0;
+        table = document.getElementById("my-table");
+        switching = true;
+
+        // Set the sorting direction to ascending:
+        dir = "asc";
+        /* Make a loop that will continue until
+      no switching has been done: */
+        while (switching) {
+          // Start by saying: no switching is done:
+          switching = false;
+          rows = table.rows;
+          console.log(rows + "**********");
+          /* Loop through all table rows (except the
+        first, which contains table headers): */
+          for (i = 1; i < rows.length - 1; i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+            if (dir == "asc") {
+              if (n == 2 || n == 4) {
+                if (
+                  parseInt(x.innerHTML.toLowerCase()) >
+                  parseInt(y.innerHTML.toLowerCase())
+                ) {
+                  shouldSwitch = true;
+                  break;
+                }
+              } else if (
+                x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()
+              ) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+            } else if (dir == "desc") {
+              if (n == 2 || n == 4) {
+                if (
+                  parseInt(x.innerHTML.toLowerCase()) <
+                  parseInt(y.innerHTML.toLowerCase())
+                ) {
+                  shouldSwitch = true;
+                  break;
+                }
+              } else if (
+                x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()
+              ) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+            }
+          }
+          if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount++;
+          } else {
+            /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+            if (switchcount == 0 && dir == "asc") {
+              dir = "desc";
+              switching = true;
+            }
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
